@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Eventos – Eventify</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #0d1b2a;
+            --secondary: #1b9aaa;
+            --accent: #f9c80e;
+            --light: #f5f5f5;
+            --danger: #e63946;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            background: var(--light);
+            color: var(--primary);
+        }
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header a.btn {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        main {
+            padding: 2rem;
+        }
+        table {
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,.08);
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 1rem;
+            text-align: left;
+        }
+        th {
+            background: var(--secondary);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .btn-edit {
+            background: var(--accent);
+            color: #000;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead {
+                display: none;
+            }
+            tr {
+                margin-bottom: 1rem;
+                border-radius: 12px;
+                box-shadow: 0 2px 6px rgba(0,0,0,.08);
+                background: white;
+                padding: 1rem;
+            }
+            td {
+                padding: 0.5rem 0;
+                border: none;
+                position: relative;
+                padding-left: 40%;
+            }
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 35%;
+                font-weight: bold;
+                color: var(--secondary);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="/">
+        <h1>🎟️ Gestión de Eventos</h1>
+    </a>
+    <a class="btn" href="/eventos/nuevo">+ Crear Evento</a>
+</header>
+
+<main>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Fecha y Hora</th>
+                <th>Lugar</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="e : ${eventos}">
+                <td data-label="ID" th:text="${e.id}"></td>
+                <td data-label="Nombre" th:text="${e.nombre}"></td>
+                <td data-label="Fecha y Hora" th:text="${#temporals.format(e.fechaHora, 'dd/MM/yyyy HH:mm')}"></td>
+                <td data-label="Lugar" th:text="${e.lugar}"></td>
+                <td data-label="Estado" th:text="${e.estado}"></td>
+                <td data-label="Acciones" class="actions">
+                    <a class="btn-edit" th:href="@{/eventos/editar/{id}(id=${e.id})}">Editar</a>
+                    <a class="btn-delete" th:href="@{/eventos/eliminar/{id}(id=${e.id})}" onclick="return confirm('¿Eliminar este evento?')">Eliminar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</main>
+
+</body>
+</html>

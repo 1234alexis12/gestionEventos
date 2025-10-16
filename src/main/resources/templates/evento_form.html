@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Evento – Eventify</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #0d1b2a;
+            --secondary: #1b9aaa;
+            --accent: #f9c80e;
+            --light: #f5f5f5;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            background: var(--light);
+            color: var(--primary);
+        }
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem 2rem;
+        }
+        main {
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        form {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(0,0,0,.08);
+        }
+        label {
+            display: block;
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.6rem;
+            margin-top: 0.3rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        button {
+            margin-top: 1.5rem;
+            width: 100%;
+            padding: 0.7rem;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #148a9c;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1 th:text="${evento.id != null} ? 'Editar Evento' : 'Crear Evento'"></h1>
+</header>
+
+<main>
+    <form th:action="@{/eventos}" th:object="${evento}" method="post">
+        <input type="hidden" th:field="*{id}" />
+        <input type="hidden" th:field="*{creadoEn}" />
+        <input type="hidden" th:field="*{version}" />
+
+        <label>Nombre del Evento:
+            <input type="text" th:field="*{nombre}" required />
+        </label>
+
+        <label>Descripción:
+            <textarea th:field="*{descripcion}" rows="3"></textarea>
+        </label>
+
+        <label>Fecha y Hora:
+            <input type="datetime-local" th:field="*{fechaHora}" required />
+        </label>
+
+        <label>Lugar:
+            <input type="text" th:field="*{lugar}" required />
+        </label>
+
+        <label>Estado:
+            <select th:field="*{estado}">
+                <option th:each="est : ${T(eventlysa.evently.entity.Evento.Estado).values()}"
+                        th:value="${est}" th:text="${est}"></option>
+            </select>
+        </label>
+
+        <button type="submit">Guardar</button>
+    </form>
+</main>
+
+</body>
+</html>
