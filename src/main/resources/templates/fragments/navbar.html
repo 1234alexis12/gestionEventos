@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    </head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark-custom" th:fragment="admin-navbar (paginaActiva)">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/principal}">Evently Admin</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="adminNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${paginaActiva == 'eventos'} ? 'active'" th:href="@{/eventos}">Eventos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${paginaActiva == 'usuarios'} ? 'active'" th:href="@{/usuarios}">Usuarios</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${paginaActiva == 'entradas'} ? 'active'" th:href="@{/entradas}">Entradas</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${paginaActiva == 'pagos'} ? 'active'" th:href="@{/pagos}">Pagos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${paginaActiva == 'aforo'} ? 'active'" th:href="@{/aforo}">Aforo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${paginaActiva == 'estadisticas'} ? 'active'" th:href="@{/estadisticas}">Estadísticas</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+</body>
+</html>

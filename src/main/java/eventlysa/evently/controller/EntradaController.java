@@ -1,49 +1,39 @@
 package eventlysa.evently.controller;
 
-import eventlysa.evently.entity.Entrada;
-import eventlysa.evently.service.EntradaService;
+import eventlysa.evently.entity.Entrada; // Importa tu entidad
+import eventlysa.evently.repository.EntradaRepository; // Importa tu repositorio
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
-import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/entradas")
+@Controller
+@RequestMapping("/entradas") // Agrupamos todas las rutas de Entradas
 public class EntradaController {
 
     @Autowired
-    private EntradaService entradaService;
+    private EntradaRepository entradaRepository;
+    
+    // (Aquí pueden ir tus otros métodos, como el de comprar o validar)
 
+    /**
+     * Muestra la lista completa de todas las entradas vendidas en el sistema.
+     *
+     * @param model El modelo para enviar datos a Thymeleaf.
+     * @return El nombre de la plantilla: "entradas".
+     */
     @GetMapping
-    public List<Entrada> getAllEntradas() {
-        return entradaService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Entrada> getEntradaById(@PathVariable Long id) {
-        Optional<Entrada> entrada = entradaService.findById(id);
-        return entrada.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public Entrada createEntrada(@RequestBody Entrada entrada) {
-        return entradaService.save(entrada);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Entrada> updateEntrada(@PathVariable Long id, @RequestBody Entrada entrada) {
-        try {
-            Entrada updatedEntrada = entradaService.update(id, entrada);
-            return ResponseEntity.ok(updatedEntrada);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEntrada(@PathVariable Long id) {
-        entradaService.deleteById(id);
-        return ResponseEntity.noContent().build();
+    public String listarEntradas(Model model) {
+        
+        // 1. Obtenemos todas las entradas de la base de datos
+        List<Entrada> listaEntradas = entradaRepository.findAll();
+        
+        // 2. Agregamos la lista al modelo con el nombre "entradas"
+        model.addAttribute("entradas", listaEntradas);
+        
+        // 3. Devolvemos el nombre de la plantilla "entradas.html"
+        return "entradas";
     }
 }

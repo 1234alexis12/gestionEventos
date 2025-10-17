@@ -1,49 +1,44 @@
 package eventlysa.evently.controller;
 
+//Asegúrate de que estas importaciones están presentes al inicio del archivo
 import eventlysa.evently.entity.Pago;
-import eventlysa.evently.service.PagoService;
+import eventlysa.evently.repository.PagoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
-import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/pagos")
+//Asegúrate de que la clase tenga @Controller
+@Controller
+@RequestMapping("/pagos") // Agrupamos todas las rutas de pagos
 public class PagoController {
 
-    @Autowired
-    private PagoService pagoService;
+ // Inyectamos el repositorio que ya tienes
+ @Autowired
+ private PagoRepository pagoRepository;
 
-    @GetMapping
-    public List<Pago> getAllPagos() {
-        return pagoService.findAll();
-    }
+ /**
+  * Este método maneja las solicitudes GET a /pagos.
+  * Busca todos los pagos en la BD y los pasa a la plantilla "pagos.html".
+  *
+  * @param model El modelo para enviar datos a Thymeleaf.
+  * @return El nombre de la plantilla: "pagos".
+  */
+ @GetMapping
+ public String listarPagos(Model model) {
+     
+     // 1. Obtenemos todos los pagos de la base de datos
+     List<Pago> listaDePagos = pagoRepository.findAll();
+     
+     // 2. Agregamos la lista al modelo con el nombre "pagos"
+     // Este nombre ${pagos} será usado en el HTML
+     model.addAttribute("pagos", listaDePagos);
+     
+     // 3. Devolvemos el nombre del archivo "pagos.html"
+     return "pagos";
+ }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Pago> getPagoById(@PathVariable Long id) {
-        Optional<Pago> pago = pagoService.findById(id);
-        return pago.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public Pago createPago(@RequestBody Pago pago) {
-        return pagoService.save(pago);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Pago> updatePago(@PathVariable Long id, @RequestBody Pago pago) {
-        try {
-            Pago updatedPago = pagoService.update(id, pago);
-            return ResponseEntity.ok(updatedPago);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePago(@PathVariable Long id) {
-        pagoService.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
+ // (Aquí puedes agregar más métodos, como /pagos/{id} en el futuro)
 }

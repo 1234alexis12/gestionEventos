@@ -1,49 +1,47 @@
 package eventlysa.evently.controller;
 
-import eventlysa.evently.entity.Aforo;
-import eventlysa.evently.service.AforoService;
+import eventlysa.evently.entity.Aforo; // Importa tu Entidad Aforo
+import eventlysa.evently.repository.AforoRepository; // Importa tu Repositorio Aforo
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@RestController
-@RequestMapping("/api/aforos")
+import java.util.List;
+
+/**
+ * Controlador para gestionar las vistas relacionadas con el Aforo.
+ * Usa @Controller para devolver plantillas de Thymeleaf.
+ */
+@Controller
+@RequestMapping("/aforo") // Todas las rutas de este controlador empezarán con /aforo
 public class AforoController {
 
+    // Inyecta el repositorio para acceder a la base de datos
     @Autowired
-    private AforoService aforoService;
+    private AforoRepository aforoRepository;
 
+    /**
+     * Maneja las solicitudes GET a /aforo.
+     * Busca todos los registros de aforo y los pasa a la plantilla "aforo.html".
+     *
+     * @param model El modelo de Spring para pasar datos a la vista.
+     * @return El nombre de la plantilla de Thymeleaf ("aforo").
+     */
     @GetMapping
-    public List<Aforo> getAllAforos() {
-        return aforoService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Aforo> getAforoById(@PathVariable Long id) {
-        Optional<Aforo> aforo = aforoService.findById(id);
-        return aforo.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public Aforo createAforo(@RequestBody Aforo aforo) {
-        return aforoService.save(aforo);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Aforo> updateAforo(@PathVariable Long id, @RequestBody Aforo aforo) {
-        try {
-            Aforo updatedAforo = aforoService.update(id, aforo);
-            return ResponseEntity.ok(updatedAforo);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAforo(@PathVariable Long id) {
-        aforoService.deleteById(id);
-        return ResponseEntity.noContent().build();
+    public String mostrarControlDeAforo(Model model) {
+        
+        // 1. Obtenemos todos los registros de aforo
+        // Gracias a JPA, estos objetos 'Aforo' también contendrán 
+        // la información del 'Evento' asociado.
+        List<Aforo> listaAforos = aforoRepository.findAll();
+        
+        // 2. Agregamos la lista al modelo con el nombre "aforos"
+        // Este nombre ${aforos} será usado en el HTML
+        model.addAttribute("aforos", listaAforos);
+        
+        // 3. Devolvemos el nombre del archivo "aforo.html"
+        return "aforo";
     }
 }
