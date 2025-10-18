@@ -32,6 +32,11 @@
         }
         .badge { font-size: 0.9em; font-weight: 500; }
         .btn-warning { color: #000; }
+        /* Estilo para que el botón de comprar quede junto a los otros */
+        .action-buttons form {
+             display: inline-block; /* Hace que el form no ocupe toda la línea */
+             margin-left: 0.25rem; /* Pequeño espacio a la izquierda */
+        }
     </style>
 </head>
 
@@ -49,6 +54,11 @@
             <a th:href="@{/eventos/nuevo}" class="btn btn-warning">
                 <i class="bi bi-plus-circle-fill"></i> Crear Evento
             </a>
+        </div>
+
+        <div th:if="${mensajeError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> <strong th:text="${mensajeError}">Error al procesar.</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
         <div class="table-responsive">
@@ -83,10 +93,23 @@
                                   class="badge bg-secondary" th:text="${evento.estado}">FINALIZADO</span>
                         </td>
 
-                        <td>
-                            <a th:href="@{/eventos/editar/{id}(id=${evento.id})}" class="btn btn-sm btn-warning">Editar</a>
+                        <td class="action-buttons">
+                            <a th:href="@{/eventos/editar/{id}(id=${evento.id})}" class="btn btn-sm btn-warning" title="Editar Evento">
+                                <i class="bi bi-pencil-fill"></i> Editar
+                            </a>
                             <a th:href="@{/eventos/eliminar/{id}(id=${evento.id})}" class="btn btn-sm btn-danger"
-                               onclick="return confirm('¿Estás seguro de que deseas eliminar este evento?');">Eliminar</a>
+                               onclick="return confirm('¿Estás seguro de que deseas eliminar este evento?');" title="Eliminar Evento">
+                               <i class="bi bi-trash-fill"></i> Eliminar
+                            </a>
+
+                            <form th:action="@{/entradas/comprar}" method="post">
+                				<input type="hidden" name="eventoId" th:value="${evento.id}" />
+                				<input type="hidden" name="cantidad" value="12" />
+
+                				<input type="hidden" name="usuarioId" value="10" /> <button type="submit" class="btn btn-sm btn-success" title="Simular Compra de 1 Entrada">
+                     				<i class="bi bi-cart-plus-fill"></i> Comprar (Sim.)
+                				</button>
+            				</form>
                         </td>
                     </tr>
                 </tbody>

@@ -2,12 +2,18 @@ package eventlysa.evently.service;
 
 import eventlysa.evently.entity.Entrada;
 import java.util.List;
-import java.util.Optional;
 
 public interface EntradaService {
-    List<Entrada> findAll();
-    Optional<Entrada> findById(Long id);
-    Entrada save(Entrada entrada);
-    Entrada update(Long id, Entrada entrada);
-    void deleteById(Long id);
+    // Podrías necesitar otros métodos aquí después
+    
+    /**
+     * Procesa la compra simulada de entradas para un evento por un usuario.
+     * Verifica aforo, crea Entradas con QR, crea Pagos y actualiza conteos.
+     * * @param eventoId ID del evento a comprar.
+     * @param usuarioId ID del usuario que compra.
+     * @param cantidad Número de entradas a comprar.
+     * @return La lista de Entradas creadas.
+     * @throws RuntimeException Si no hay suficiente aforo o ocurre otro error.
+     */
+    List<Entrada> comprarEntradas(Long eventoId, Long usuarioId, int cantidad);
 }
