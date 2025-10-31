@@ -32,7 +32,7 @@ public class EstadisticasController {
     private PagoRepository pagoRepository;
 
     /**
-     * Muestra el dashboard de estadísticas generales.
+     * Muestra el dashboard de estadísticas generales
      */
     @GetMapping
     public String mostrarEstadisticas(Model model) {
