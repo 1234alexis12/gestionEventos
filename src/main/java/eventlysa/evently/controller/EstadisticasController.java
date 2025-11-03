@@ -37,7 +37,7 @@ public class EstadisticasController {
     @GetMapping
     public String mostrarEstadisticas(Model model) {
         
-        // 1. Total de Eventos
+        // 1. Total de Evento
         long totalEventos = eventoRepository.count();
 
         // 2. Entradas Vendidas (usando el método que añadimos)
@@ -52,7 +52,7 @@ public class EstadisticasController {
         // Maneja el caso de que no haya ventas (la suma daría null)
         BigDecimal ingresosTotales = Optional.ofNullable(ingresos).orElse(BigDecimal.ZERO);
 
-        // Pasamos los datos a la vista
+        // Pasamos los datos a vista
         model.addAttribute("totalEventos", totalEventos);
         model.addAttribute("entradasVendidas", entradasVendidas);
         model.addAttribute("usuariosRegistrados", usuariosRegistrados);
